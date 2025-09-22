@@ -43,10 +43,13 @@ public class UIManager : MonoBehaviour
             
 
             Image img = memberUI.GetComponent<Image>();
-            RectTransform rt = memberUI.transform.GetChild(0).transform.GetChild(1).transform.GetComponent<RectTransform>();
-            Vector2 size = rt.sizeDelta;
-            size.x = (float)partyManager.partyMembers[idx].GetComponent<Stat>().currentHP / partyManager.partyMembers[idx].GetComponent<Stat>().maxHP * 128;
-            rt.sizeDelta = size;
+
+            Stat memberStat = partyManager.partyMembers[idx].GetComponent<Stat>();
+            //float currentHP = memberStat.GetTotalValue(StatType.HP);
+            //float maxHP = memberStat.GetTotalValue(StatType.MaxHP);
+
+            Image healthBar = memberUI.transform.GetChild(1).GetComponent<Image>();
+            //healthBar.fillAmount = currentHP / maxHP;
 
             if (partyManager.selectedIndex == i)
             {

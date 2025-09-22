@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
+using System;
 
 public class Character : MonoBehaviour
 {
@@ -8,19 +9,10 @@ public class Character : MonoBehaviour
     public Inventory inventory;
     public Skill[] skills;
 
-    private void Start()
+    private void Awake()
     {
-        stat = gameObject.transform.GetComponent<Stat>();
+        stat = new Stat();
         inventory = new Inventory();
-    }
-
-    public void ReceiveDamage(float dmg)
-    {
-        stat.TakeDamage(dmg);
-        if (!stat.isAlive)
-        {
-            Die();
-        }
     }
 
     void Die()
@@ -31,16 +23,14 @@ public class Character : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.V))
         {
-            if (Input.GetKeyDown(KeyCode.V))
+            if (skills.Length > 0)
             {
-                if (skills.Length > 0)
+                Transform target = GameObject.FindWithTag("Enemy")?.transform;
+                if (target != null)
                 {
-                    Transform target = GameObject.FindWithTag("Enemy")?.transform;
-                    if (target != null)
-                    {
-                        skills[0].Use(transform, target);
-                    }
+                    skills[0].Use(transform, target);
                 }
             }
         }

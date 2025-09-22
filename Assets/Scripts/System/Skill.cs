@@ -8,7 +8,7 @@ public class Skill
     public float cooldown = 1f;
     public float manaCost = 10f;
 
-    public enum SkillType {  Damage, Heal, Buff, Passive }
+    public enum SkillType {  MeleeDamage, MagicDamage, Heal, Buff, Passive }
     public SkillType skillType;
 
     public float power;
@@ -26,18 +26,18 @@ public class Skill
         Stat casterStat = caster.GetComponent<Stat>();
         Stat targetStat = target.GetComponent<Stat>();
         if (casterStat == null || targetStat == null) return;
-        if (casterStat.currentMP < manaCost) return;
+        if (casterStat.GetTotalValue(StatType.MP) < manaCost) return;
 
-        casterStat.currentMP -= manaCost;
+        casterStat.AddBase(StatType.MP, casterStat.GetTotalValue(StatType.MP) - manaCost);
         lastUsedTime = Time.time;
 
         switch (skillType)
         {
-            case SkillType.Damage:
-                targetStat.TakeDamage(casterStat.attack * power);
+            case SkillType.MeleeDamage:
+                targetStat.TakeMeleeDamage(casterStat.GetTotalValue(StatType.Strength) * power);
                 break;
             case SkillType.Heal:
-                targetStat.Heal((int)(casterStat.attack * power));
+                targetStat.Heal((int)(casterStat.GetTotalValue(StatType.Intelligence) * power));
                 break;
             case SkillType.Buff:
                 // Implement buff logic here
