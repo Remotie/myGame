@@ -6,6 +6,8 @@ public class Inventory
 {
     public List<Item> items = new List<Item>();
 
+    public int maxSlot = 20;
+
     public void AddItem(Item newItem)
     {
         if (newItem.isStackable)

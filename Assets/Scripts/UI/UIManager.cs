@@ -44,7 +44,7 @@ public class UIManager : MonoBehaviour
 
             Image img = memberUI.GetComponent<Image>();
 
-            Stat memberStat = partyManager.partyMembers[idx].GetComponent<Stat>();
+            Stat memberStat = partyManager.partyMembers[idx].GetComponent<Character>().stat;
             //float currentHP = memberStat.GetTotalValue(StatType.HP);
             //float maxHP = memberStat.GetTotalValue(StatType.MaxHP);
 

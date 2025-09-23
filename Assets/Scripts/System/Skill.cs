@@ -23,8 +23,9 @@ public class Skill
     public void Use(Transform caster, Transform target)
     {
         if (!CanUse()) return;
-        Stat casterStat = caster.GetComponent<Stat>();
-        Stat targetStat = target.GetComponent<Stat>();
+        Stat casterStat = caster.GetComponent<Character>().stat;
+        Stat targetStat = target.GetComponent<Character>().stat;
+
         if (casterStat == null || targetStat == null) return;
         if (casterStat.GetTotalValue(StatType.MP) < manaCost) return;
 

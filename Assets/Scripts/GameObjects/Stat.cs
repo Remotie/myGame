@@ -1,6 +1,8 @@
+using AYellowpaper.SerializedCollections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public enum StatType 
 {
@@ -49,6 +51,7 @@ public class StatValue
             }
         }
     }
+
     public float BuffValue { get => buffValue; 
         set
         {
@@ -83,26 +86,43 @@ public class StatValue
 public class StatEntry
 {
     public string key;
-    public float value;
+    public float baseValue;
+    public float bonusValue;
+    public float buffValue;
+    public float totalValue;
 }
+
+//[Serializable]
+//public class StatDictionary : SerializedDictionary<StatType, StatValue> { }
 
 [System.Serializable]
 public class Stat
 {
-    [SerializeField] 
+    [SerializeField]
     private List<StatEntry> statList = new List<StatEntry>();
 
-    private Dictionary<StatType, StatValue> stats = new();
+    //[SerializeField]
+    //private StatDictionary stats = new();
+
+    public Dictionary<StatType, StatValue> stats = new();
+
     public event Action<StatType, float> OnStatChanged;
 
     public Stat()
     {
         StatType[] types = (StatType[])Enum.GetValues(typeof(StatType));
-        Debug.Log("Stat initialized.");
+        Debug.Log($"Stat initialized.");
         foreach (var type in types)
         {
             stats[type] = new StatValue(type);
-            statList.Add(new StatEntry { key = type.ToString(), value = stats[type].TotalValue });
+            statList.Add(new StatEntry
+            {
+                key = type.ToString(),
+                baseValue = stats[type].baseValue,
+                bonusValue = stats[type].BonusValue,
+                buffValue = stats[type].BuffValue,
+                totalValue = stats[type].TotalValue,
+            });
         }
 
         foreach (var stat in stats.Values)
@@ -118,6 +138,7 @@ public class Stat
 
         return stats[type];
     }
+
     public float GetTotalValue(StatType type) => stats[type].TotalValue;
 
     public void AddBase(StatType type, float value) => stats[type].AddBase(value);
