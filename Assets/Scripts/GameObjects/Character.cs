@@ -33,12 +33,21 @@ public class Character : MonoBehaviour
     {
         //stat = new Stat();
         inventory = new Inventory();
+        stat.init();
     }
 
     void Die()
     {
         Debug.Log("Enemy defeated!");
         Destroy(gameObject);
+    }
+
+    public void TakeMeleeDamage(float damage)
+    {
+        if (isAlive)
+        {
+            stat.AddBase(StatType.HP, -damage);
+        }
     }
 
     private void Update()

@@ -66,7 +66,7 @@ public class StatValue
     public float TotalValue => BaseValue + BonusValue + BuffValue;
     public Action onValueChanged;
 
-    public StatValue(StatType type, float baseValue = 0f)
+    public StatValue(StatType type, float baseValue = 1000f)
     {
         Type = type;
         BaseValue = baseValue;
@@ -110,11 +110,15 @@ public class Stat
 
     public Stat()
     {
+    }
+
+    public void init()
+    {
         StatType[] types = (StatType[])Enum.GetValues(typeof(StatType));
-        Debug.Log($"Stat initialized.");
         foreach (var type in types)
         {
             stats[type] = new StatValue(type);
+            Debug.Log(stats[type].baseValue);
             statList.Add(new StatEntry
             {
                 key = type.ToString(),
@@ -126,7 +130,29 @@ public class Stat
         }
 
         foreach (var stat in stats.Values)
+        {
             stat.onValueChanged += () => OnStatChanged?.Invoke(stat.Type, stat.TotalValue);
+            stat.onValueChanged += SyncStatList;
+        }
+    }
+
+    public void SyncStatList()
+    {
+        Debug.Log("SyncStatList called");
+        StatType[] types = (StatType[])Enum.GetValues(typeof(StatType));
+
+        foreach (var type in types)
+        {
+            var stat = stats[type];
+            var entry = statList.Find(e => e.key == type.ToString());
+            if (entry != null)
+            {
+                entry.baseValue = stat.BaseValue;
+                entry.bonusValue = stat.BonusValue;
+                entry.buffValue = stat.BuffValue;
+                entry.totalValue = stat.TotalValue;
+            }
+        }
     }
 
     public StatValue GetStat(StatType type) {
@@ -153,12 +179,6 @@ public class Stat
     public void ResetBuff()
     {
         foreach (var s in stats.Values) s.ClearBuff();
-    }
-
-    public void TakeMeleeDamage(float damage)
-    {
-        float defense = GetTotalValue(StatType.Defense);
-        float finalDamage = damage * (100 / (100 + defense));
     }
 
     public void Heal(float amount)
