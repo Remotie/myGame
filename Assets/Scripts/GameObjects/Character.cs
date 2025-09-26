@@ -5,20 +5,49 @@ using System;
 
 public class Character : MonoBehaviour
 {
-    public Stat stat;
+    // Identity
+    public string characterName = "Character";
+    public int level;
+    public float currentEXP;
+    public float EXP;
+
+    // Stats
+    public Stat stat = new Stat();
+
+    // Inventory && Equiment
     public Inventory inventory;
+    // TODO
+    // public Equipment equipment;
+
+    // Skills
     public Skill[] skills;
+
+    // State
+    public bool isAlive = true;
+
+    // Controller
+
+    // Animator / FX
 
     private void Awake()
     {
-        stat = new Stat();
+        //stat = new Stat();
         inventory = new Inventory();
+        stat.init();
     }
 
     void Die()
     {
         Debug.Log("Enemy defeated!");
         Destroy(gameObject);
+    }
+
+    public void TakeMeleeDamage(float damage)
+    {
+        if (isAlive)
+        {
+            stat.AddBase(StatType.HP, -damage);
+        }
     }
 
     private void Update()

@@ -23,21 +23,22 @@ public class Skill
     public void Use(Transform caster, Transform target)
     {
         if (!CanUse()) return;
-        Stat casterStat = caster.GetComponent<Stat>();
-        Stat targetStat = target.GetComponent<Stat>();
-        if (casterStat == null || targetStat == null) return;
-        if (casterStat.GetTotalValue(StatType.MP) < manaCost) return;
+        Character c = caster.GetComponent<Character>();
+        Character t = target.GetComponent<Character>();
 
-        casterStat.AddBase(StatType.MP, casterStat.GetTotalValue(StatType.MP) - manaCost);
+        if (c == null || t == null) return;
+        if (c.stat.GetTotalValue(StatType.MP) < manaCost) return;
+
+        c.stat.AddBase(StatType.MP, c.stat.GetTotalValue(StatType.MP) - manaCost);
         lastUsedTime = Time.time;
 
         switch (skillType)
         {
             case SkillType.MeleeDamage:
-                targetStat.TakeMeleeDamage(casterStat.GetTotalValue(StatType.Strength) * power);
+                t.TakeMeleeDamage(c.stat.GetTotalValue(StatType.Strength) * power);
                 break;
             case SkillType.Heal:
-                targetStat.Heal((int)(casterStat.GetTotalValue(StatType.Intelligence) * power));
+                //t.Heal((int)(c.stat.GetTotalValue(StatType.Intelligence) * power));
                 break;
             case SkillType.Buff:
                 // Implement buff logic here
