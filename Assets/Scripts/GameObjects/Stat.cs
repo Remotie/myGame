@@ -98,6 +98,7 @@ public class Stat
     public Stat()
     {
         StatType[] types = (StatType[])Enum.GetValues(typeof(StatType));
+
         Debug.Log("Stat initialized.");
         foreach (var type in types)
         {
